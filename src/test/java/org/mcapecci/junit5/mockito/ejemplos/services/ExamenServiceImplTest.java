@@ -2,9 +2,14 @@ package org.mcapecci.junit5.mockito.ejemplos.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mcapecci.junit5.mockito.ejemplos.models.Examen;
 import org.mcapecci.junit5.mockito.ejemplos.repositories.ExamenRepository;
 import org.mcapecci.junit5.mockito.ejemplos.repositories.PreguntaRepository;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
@@ -15,17 +20,23 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Habilitar el uso de anotaciones, 2 maneras posibles:
+ * 1. MockitoAnnotations.openMocks(this); en el setUp @BeforeEach
+ * 2. @ExtendWith(MockitoExtension.class) clase anotada (importante tener mockito-junit-jupiter en el pom)
+ */
+@ExtendWith(MockitoExtension.class)
 class ExamenServiceImplTest {
+    @Mock
     ExamenRepository repository;
-
+    @Mock
     PreguntaRepository preguntaRepository;
-    ExamenService service;
-    @BeforeEach
-    void setUp() {
-        repository = mock(ExamenRepository.class);
-        preguntaRepository = mock(PreguntaRepository.class);
-        service = new ExamenServiceImpl(repository, preguntaRepository);
-    }
+    @InjectMocks
+    ExamenServiceImpl service;
+//    @BeforeEach
+//    void setUp() {
+//        MockitoAnnotations.openMocks(this);
+//    }
 
     @Test
     void findExamenPorNombre() {
