@@ -55,5 +55,26 @@ class ExamenServiceImplTest {
         assertTrue(examen.getPreguntas().contains("aritmética"));
     }
 
+    @Test
+    void testPreguntasExamenVerify() {
+        when(repository.findaAll()).thenReturn(MockUtil.examenList);
+        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(MockUtil.preguntaList);
+        Examen examen = service.findExamenPorNombreConPreguntas("Matemáticas");
+        assertEquals(5, examen.getPreguntas().size());
+        assertTrue(examen.getPreguntas().contains("aritmética"));
+        verify(repository).findaAll();
+        verify(preguntaRepository).findPreguntasPorExamenId(anyLong());
+    }
+
+    @Test
+    void testNoExisteExamenVerify() {
+        when(repository.findaAll()).thenReturn(Collections.emptyList());
+        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(MockUtil.preguntaList);
+        Examen examen = service.findExamenPorNombreConPreguntas("Matemáticas2");
+        assertNull(examen);
+        verify(repository).findaAll();
+        verify(preguntaRepository).findPreguntasPorExamenId(5L);
+    }
+
 
 }
