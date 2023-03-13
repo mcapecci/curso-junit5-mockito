@@ -1,6 +1,5 @@
 package org.mcapecci.junit5.mockito.ejemplos.services;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mcapecci.junit5.mockito.ejemplos.models.Examen;
@@ -8,12 +7,10 @@ import org.mcapecci.junit5.mockito.ejemplos.repositories.ExamenRepository;
 import org.mcapecci.junit5.mockito.ejemplos.repositories.PreguntaRepository;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +37,7 @@ class ExamenServiceImplTest {
 
     @Test
     void findExamenPorNombre() {
-        when(repository.findaAll()).thenReturn(MockUtil.examenList);
+        when(repository.findaAll()).thenReturn(MockUtil.EXAMEN_LIST);
         Optional<Examen> examen = service.findExamenPorNombre("Matemáticas");
 
         assertTrue(examen.isPresent());
@@ -59,8 +56,8 @@ class ExamenServiceImplTest {
 
     @Test
     void testPreguntasExamen() {
-        when(repository.findaAll()).thenReturn(MockUtil.examenList);
-        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(MockUtil.preguntaList);
+        when(repository.findaAll()).thenReturn(MockUtil.EXAMEN_LIST);
+        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(MockUtil.PREGUNTA_LIST);
         Examen examen = service.findExamenPorNombreConPreguntas("Matemáticas");
         assertEquals(5, examen.getPreguntas().size());
         assertTrue(examen.getPreguntas().contains("aritmética"));
@@ -68,8 +65,8 @@ class ExamenServiceImplTest {
 
     @Test
     void testPreguntasExamenVerify() {
-        when(repository.findaAll()).thenReturn(MockUtil.examenList);
-        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(MockUtil.preguntaList);
+        when(repository.findaAll()).thenReturn(MockUtil.EXAMEN_LIST);
+        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(MockUtil.PREGUNTA_LIST);
         Examen examen = service.findExamenPorNombreConPreguntas("Matemáticas");
         assertEquals(5, examen.getPreguntas().size());
         assertTrue(examen.getPreguntas().contains("aritmética"));
@@ -80,12 +77,26 @@ class ExamenServiceImplTest {
     @Test
     void testNoExisteExamenVerify() {
         when(repository.findaAll()).thenReturn(Collections.emptyList());
-        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(MockUtil.preguntaList);
+        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(MockUtil.PREGUNTA_LIST);
         Examen examen = service.findExamenPorNombreConPreguntas("Matemáticas2");
         assertNull(examen);
         verify(repository).findaAll();
         verify(preguntaRepository).findPreguntasPorExamenId(5L);
     }
 
+    @Test
+    void testGuardarExamen() {
+        Examen newExamen = MockUtil.EXAMEN;
+        newExamen.setPreguntas(MockUtil.PREGUNTA_LIST);
+        when(repository.guardar(any(Examen.class))).thenReturn(MockUtil.EXAMEN);
+        Examen examen = service.guardar(newExamen);
+
+        assertNotNull(examen.getId());
+        assertEquals(8L, examen.getId());
+        assertEquals("Física", examen.getNombre());
+
+        verify(repository).guardar(any(Examen.class));
+        verify(preguntaRepository).guardarVarias(anyList());
+    }
 
 }
