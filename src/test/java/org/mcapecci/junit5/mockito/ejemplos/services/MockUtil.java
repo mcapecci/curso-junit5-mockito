@@ -11,6 +11,11 @@ public class MockUtil {
             new Examen(7L, "Historia")
     );
 
+    public final static List<Examen> EXAMEN_LIST_ID_NULL =  Arrays.asList(
+            new Examen(null, "Matemáticas"), new Examen(null, "Lenguaje"),
+            new Examen(null, "Historia")
+    );
+
     public final static List<String> PREGUNTA_LIST = Arrays.asList("aritmética",
             "integrales", "derivadas", "trigonometría", "geometría");
 

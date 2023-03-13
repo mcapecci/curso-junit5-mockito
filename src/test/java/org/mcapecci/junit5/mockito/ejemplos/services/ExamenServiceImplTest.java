@@ -118,4 +118,30 @@ class ExamenServiceImplTest {
         verify(preguntaRepository).guardarVarias(anyList());
     }
 
+    @Test
+    void testManejoException() {
+        when(repository.findaAll()).thenReturn(MockUtil.EXAMEN_LIST);
+        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenThrow(IllegalArgumentException.class);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.findExamenPorNombreConPreguntas("Matemáticas");
+        });
+        assertEquals(IllegalArgumentException.class, exception.getClass());
+        verify(repository).findaAll();
+        verify(preguntaRepository).findPreguntasPorExamenId(anyLong());
+    }
+
+    @Test
+    void testManejoExceptionExamenIdNull() {
+        when(repository.findaAll()).thenReturn(MockUtil.EXAMEN_LIST_ID_NULL);
+        when(preguntaRepository.findPreguntasPorExamenId(isNull())).thenThrow(IllegalArgumentException.class);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.findExamenPorNombreConPreguntas("Matemáticas");
+        });
+        assertEquals(IllegalArgumentException.class, exception.getClass());
+        verify(repository).findaAll();
+        verify(preguntaRepository).findPreguntasPorExamenId(isNull());
+    }
+
 }
