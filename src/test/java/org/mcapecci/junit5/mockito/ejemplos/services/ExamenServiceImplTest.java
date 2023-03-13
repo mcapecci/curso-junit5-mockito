@@ -5,9 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mcapecci.junit5.mockito.ejemplos.models.Examen;
 import org.mcapecci.junit5.mockito.ejemplos.repositories.ExamenRepository;
 import org.mcapecci.junit5.mockito.ejemplos.repositories.PreguntaRepository;
-import org.mockito.ArgumentMatcher;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
@@ -31,6 +29,8 @@ class ExamenServiceImplTest {
     ExamenRepository repository;
     @Mock
     PreguntaRepository preguntaRepository;
+    @Captor
+    ArgumentCaptor<Long> captor;
     @InjectMocks
     ExamenServiceImpl service;
 //    @BeforeEach
@@ -197,6 +197,18 @@ class ExamenServiceImplTest {
             return "mensaje personalizado de error que imprime mockito en caso de que falle el test" +
                     argument + " debe ser un entero positivo";
         }
+    }
+
+    @Test
+    void testArgumentCaptor() {
+        when(repository.findaAll()).thenReturn(MockUtil.EXAMEN_LIST);
+//        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(MockUtil.PREGUNTA_LIST);
+        service.findExamenPorNombreConPreguntas("Matemáticas");
+
+//        ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+        verify(preguntaRepository).findPreguntasPorExamenId(captor.capture());
+
+        assertEquals(5L, captor.getValue());
     }
 
 }
