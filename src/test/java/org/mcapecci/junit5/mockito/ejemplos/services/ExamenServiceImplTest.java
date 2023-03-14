@@ -211,4 +211,13 @@ class ExamenServiceImplTest {
         assertEquals(5L, captor.getValue());
     }
 
+    @Test
+    void testDoThrow() {
+        Examen examen = MockUtil.EXAMEN;
+        examen.setPreguntas(MockUtil.PREGUNTA_LIST);
+        doThrow(IllegalArgumentException.class).when(preguntaRepository).guardarVarias(anyList());
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.guardar(examen);
+        });
+    }
 }
