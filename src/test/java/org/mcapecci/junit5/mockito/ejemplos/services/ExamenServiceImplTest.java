@@ -291,4 +291,71 @@ class ExamenServiceImplTest {
         assertEquals(5L, examen.getId());
         assertEquals("Matemáticas", examen.getNombre());
     }
+
+    @Test
+    void testOrdenDeInvocaciones() {
+        when(repository.findaAll()).thenReturn(MockUtil.EXAMEN_LIST);
+
+        service.findExamenPorNombreConPreguntas("Matemáticas");
+        service.findExamenPorNombreConPreguntas("Lenguaje");
+
+        InOrder inOrder = inOrder(preguntaRepository);
+        inOrder.verify(preguntaRepository).findPreguntasPorExamenId(5L);
+        inOrder.verify(preguntaRepository).findPreguntasPorExamenId(6L);
+
+    }
+
+    @Test
+    void testOrdenDeInvocaciones2() {
+        when(repository.findaAll()).thenReturn(MockUtil.EXAMEN_LIST);
+
+        service.findExamenPorNombreConPreguntas("Matemáticas");
+        service.findExamenPorNombreConPreguntas("Lenguaje");
+
+        InOrder inOrder = inOrder(repository, preguntaRepository);
+        inOrder.verify(repository).findaAll();
+        inOrder.verify(preguntaRepository).findPreguntasPorExamenId(5L);
+
+        inOrder.verify(repository).findaAll();
+        inOrder.verify(preguntaRepository).findPreguntasPorExamenId(6L);
+
+    }
+
+    @Test
+    void testNumeroDeInvocaciones() {
+        when(repository.findaAll()).thenReturn(MockUtil.EXAMEN_LIST);
+        service.findExamenPorNombreConPreguntas("Matemáticas");
+
+        verify(preguntaRepository).findPreguntasPorExamenId(5L);
+        //wanted number of invocations
+        verify(preguntaRepository, times(1)).findPreguntasPorExamenId(5L);
+        //min number of invocations
+        verify(preguntaRepository, atLeast(1)).findPreguntasPorExamenId(5L);
+        //al menos una vez
+        verify(preguntaRepository, atLeastOnce()).findPreguntasPorExamenId(5L);
+        //max number of invocations
+         verify(preguntaRepository, atMost(10)).findPreguntasPorExamenId(5L);
+         //como max una vez
+         verify(preguntaRepository, atMostOnce()).findPreguntasPorExamenId(5L);
+    }
+
+    @Test
+    void testNumeroDeInvocaciones2() {
+        when(repository.findaAll()).thenReturn(Collections.emptyList());
+        service.findExamenPorNombreConPreguntas("Matemáticas");
+
+        //never indica que no hubo interacción con ese método
+        verify(preguntaRepository, never()).findPreguntasPorExamenId(5L);
+        //no interactua con el mock
+        verifyNoInteractions(preguntaRepository);
+
+        //tiene interaccion
+        verify(repository).findaAll();
+        verify(repository, times(1)).findaAll();
+        verify(repository, atLeast(1)).findaAll();
+        verify(repository, atLeastOnce()).findaAll();
+        verify(repository, atMost(10)).findaAll();
+        verify(repository, atMostOnce()).findaAll();
+
+    }
 }
