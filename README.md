@@ -1,2 +1,2 @@
 # curso-junit5-mockito
-Proyecto con JUnit 5 y Mockito
+JUnit 5 y Mockito usando las mejores prácticas testing TDD, además incluye Unit Test con Spring Boot
