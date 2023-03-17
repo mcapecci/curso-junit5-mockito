@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mcapecci.junit5.mockito.ejemplos.models.Examen;
 import org.mcapecci.junit5.mockito.ejemplos.repositories.ExamenRepository;
+import org.mcapecci.junit5.mockito.ejemplos.repositories.ExamenRepositoryImpl;
 import org.mcapecci.junit5.mockito.ejemplos.repositories.PreguntaRepository;
+import org.mcapecci.junit5.mockito.ejemplos.repositories.PreguntaRepositoryImpl;
 import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,9 +28,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class ExamenServiceImplTest {
     @Mock
-    ExamenRepository repository;
+    ExamenRepositoryImpl repository;
     @Mock
-    PreguntaRepository preguntaRepository;
+    PreguntaRepositoryImpl preguntaRepository;
     @Captor
     ArgumentCaptor<Long> captor;
     @InjectMocks
@@ -266,5 +268,24 @@ class ExamenServiceImplTest {
 
         verify(repository).guardar(any(Examen.class));
         verify(preguntaRepository).guardarVarias(anyList());
+    }
+
+    /**
+     * doCallRealMethod when you want to call the real implementation of a method.
+     *
+     * se cambia @Mock ExamenRepository por ExamenRepositoryImpl
+     * se cambia @Mock PreguntaRepository por PreguntaRepositoryImpl
+     * ya que doCallRealMethod trabaja con la implementación no con la Interfaz
+     */
+    @Test
+    void testDoCallRealMehthod() {
+        when(repository.findaAll()).thenReturn(MockUtil.EXAMEN_LIST);
+        //when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(MockUtil.PREGUNTA_LIST);
+
+        doCallRealMethod().when(preguntaRepository).findPreguntasPorExamenId(anyLong());
+
+        Examen examen = service.findExamenPorNombreConPreguntas("Matemáticas");
+        assertEquals(5L, examen.getId());
+        assertEquals("Matemáticas", examen.getNombre());
     }
 }
