@@ -14,6 +14,7 @@ import org.mockito.stubbing.Answer;
 
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -271,7 +272,9 @@ class ExamenServiceImplTest {
     }
 
     /**
-     * doCallRealMethod when you want to call the real implementation of a method.
+     * doCallRealMethod
+     *
+     * when you want to call the real implementation of a method.
      *
      * se cambia @Mock ExamenRepository por ExamenRepositoryImpl
      * se cambia @Mock PreguntaRepository por PreguntaRepositoryImpl

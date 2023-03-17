@@ -18,7 +18,6 @@ public class ExamenRepositoryImpl implements ExamenRepository {
     public List<Examen> findaAll() {
         System.out.println("ExamenRepositoryImpl.findaAll");
         try {
-            System.out.println("ExamenRepositoryImpl");
             TimeUnit.SECONDS.sleep(5);
         } catch (InterruptedException e){
             e.printStackTrace();
