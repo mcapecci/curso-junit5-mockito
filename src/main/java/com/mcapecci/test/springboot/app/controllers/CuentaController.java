@@ -14,6 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Para acceder a la UI: http://localhost:8080/swagger-ui/
+ * Desde localhost:8080/v2/api-docs accedemos a la documentación de nuestra aplicación
+ */
 @RestController
 @RequestMapping("/api/cuentas")
 public class CuentaController {
