@@ -38,6 +38,7 @@ class CuentaControllerWebTestClientTests {
     }
 
     @Test
+    @Order(1)
     void testTransferir() throws JsonProcessingException {
         // given
         TransaccionDto dto = new TransaccionDto();
@@ -82,4 +83,34 @@ class CuentaControllerWebTestClientTests {
 
     }
 
+    @Test
+    @Order(2)
+    void testDetalle() throws JsonProcessingException {
+
+        Cuenta cuenta = new Cuenta(1L, "Andrés", new BigDecimal("900"));
+
+        client.get().uri("/api/cuentas/1").exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody()
+                .jsonPath("$.persona").isEqualTo("Andrés")
+                .jsonPath("$.saldo").isEqualTo(900)
+                .json(objectMapper.writeValueAsString(cuenta));
+    }
+
+    @Test
+    @Order(3)
+    void testDetalle2() {
+
+        client.get().uri("/api/cuentas/2").exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(Cuenta.class)
+                .consumeWith(response -> {
+                    Cuenta cuenta = response.getResponseBody();
+                    assertNotNull(cuenta);
+                    assertEquals("John", cuenta.getPersona());
+                    assertEquals("2100.00", cuenta.getSaldo().toPlainString());
+                });
+    }
 }
