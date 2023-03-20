@@ -2,12 +2,10 @@ package com.mcapecci.test.springboot.app.services;
 
 
 import com.mcapecci.test.springboot.app.models.Cuenta;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 
-@Service
 public interface CuentaService {
     Cuenta findById(Long id);
 
