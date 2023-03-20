@@ -1,4 +1,4 @@
-package org.mcapecci.junit5.mockito.app.models;
+package com.mcapecci.test.springboot.app.models;
 
 public class Banco {
     private Long id;

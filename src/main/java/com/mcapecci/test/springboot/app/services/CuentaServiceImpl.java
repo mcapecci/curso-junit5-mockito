@@ -1,15 +1,14 @@
-package org.mcapecci.junit5.mockito.app.services;
+package com.mcapecci.test.springboot.app.services;
 
-import org.mcapecci.junit5.mockito.app.models.Banco;
-import org.mcapecci.junit5.mockito.app.models.Cuenta;
-import org.mcapecci.junit5.mockito.app.repositories.BancoRepository;
-import org.mcapecci.junit5.mockito.app.repositories.CuentaRepository;
-import org.springframework.stereotype.Service;
+import com.mcapecci.test.springboot.app.models.Banco;
+import com.mcapecci.test.springboot.app.models.Cuenta;
+import com.mcapecci.test.springboot.app.repositories.BancoRepository;
+import com.mcapecci.test.springboot.app.repositories.CuentaRepository;
 
 import java.math.BigDecimal;
 
-@Service
 public class CuentaServiceImpl implements CuentaService{
+
     private CuentaRepository cuentaRepository;
     private BancoRepository bancoRepository;
 
@@ -52,4 +51,5 @@ public class CuentaServiceImpl implements CuentaService{
         banco.setTotalTransferencias(++totalTransferencias);
         bancoRepository.update(banco);
     }
+
 }

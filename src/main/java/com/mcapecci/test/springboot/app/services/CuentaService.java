@@ -1,10 +1,13 @@
-package org.mcapecci.junit5.mockito.app.services;
+package com.mcapecci.test.springboot.app.services;
 
 
-import org.mcapecci.junit5.mockito.app.models.Cuenta;
+import com.mcapecci.test.springboot.app.models.Cuenta;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+
+@Service
 public interface CuentaService {
     Cuenta findById(Long id);
 

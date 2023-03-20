@@ -1,4 +1,4 @@
-package org.mcapecci.junit5.mockito.app;
+package com.mcapecci.test.springboot.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

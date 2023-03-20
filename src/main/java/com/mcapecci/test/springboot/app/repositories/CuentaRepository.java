@@ -1,7 +1,7 @@
-package org.mcapecci.junit5.mockito.app.repositories;
+package com.mcapecci.test.springboot.app.repositories;
 
 
-import org.mcapecci.junit5.mockito.app.models.Cuenta;
+import com.mcapecci.test.springboot.app.models.Cuenta;
 
 import java.util.List;
 

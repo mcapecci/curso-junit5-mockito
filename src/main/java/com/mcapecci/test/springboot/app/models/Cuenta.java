@@ -1,7 +1,7 @@
-package org.mcapecci.junit5.mockito.app.models;
+package com.mcapecci.test.springboot.app.models;
 
 
-import org.mcapecci.junit5.mockito.app.exceptions.DineroInsuficienteException;
+import com.mcapecci.test.springboot.app.exceptions.DineroInsuficienteException;
 
 import java.math.BigDecimal;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package org.mcapecci.junit5.mockito.app.exceptions;
+package com.mcapecci.test.springboot.app.exceptions;
 
 public class DineroInsuficienteException extends RuntimeException{
     public DineroInsuficienteException(String message) {
