@@ -2,6 +2,7 @@ package com.mcapecci.test.springboot.app.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mcapecci.test.springboot.app.models.Cuenta;
 import com.mcapecci.test.springboot.app.models.TransaccionDto;
 import com.mcapecci.test.springboot.app.services.CuentaService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +15,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.mcapecci.test.springboot.app.Datos.crearCuenta001;
+import static com.mcapecci.test.springboot.app.Datos.crearCuenta002;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -88,6 +93,29 @@ class CuentaControllerTest {
                 .andExpect(jsonPath("$.transaccion.cuentaOrigenId").value(dto.getCuentaOrigenId()))
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
 
+    }
+
+    @Test
+    void testListar() throws Exception {
+        // Given
+        List<Cuenta> cuentas = Arrays.asList(crearCuenta001().orElseThrow(),
+                crearCuenta002().orElseThrow()
+        );
+        when(cuentaService.findAll()).thenReturn(cuentas);
+
+        // When
+        mvc.perform(get("/api/cuentas").contentType(MediaType.APPLICATION_JSON))
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].persona").value("Andrés"))
+                .andExpect(jsonPath("$[1].persona").value("Jhon"))
+                .andExpect(jsonPath("$[0].saldo").value("1000"))
+                .andExpect(jsonPath("$[1].saldo").value("2000"))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(content().json(objectMapper.writeValueAsString(cuentas)));
+
+        verify(cuentaService).findAll();
     }
 
 }
