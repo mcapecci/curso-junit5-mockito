@@ -53,7 +53,7 @@ class CuentaControllerWebTestClientTests {
         response.put("transaccion", dto);
 
         // when
-        client.post().uri("http://localhost:8080/api/cuentas/transferir")
+        client.post().uri("/api/cuentas/transferir")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
@@ -61,6 +61,17 @@ class CuentaControllerWebTestClientTests {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
+                .consumeWith(respuesta -> {
+                    try {
+                        JsonNode json = objectMapper.readTree(respuesta.getResponseBody());
+                        assertEquals("Transferencia realizada con éxito!", json.path("mensaje").asText());
+                        assertEquals(1L, json.path("transaccion").path("cuentaOrigenId").asLong());
+                        assertEquals(LocalDate.now().toString(), json.path("date").asText());
+                        assertEquals("100", json.path("transaccion").path("monto").asText());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                })
                 .jsonPath("$.mensaje").isNotEmpty()
                 .jsonPath("$.mensaje").value(is("Transferencia realizada con éxito!"))
                 .jsonPath("$.mensaje").value(valor -> assertEquals("Transferencia realizada con éxito!", valor))
