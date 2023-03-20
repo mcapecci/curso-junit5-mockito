@@ -132,6 +132,39 @@ class CuentaControllerTestRestTemplateTest {
         assertEquals("Pepa", cuentaCreada.getPersona());
         assertEquals("3800", cuentaCreada.getSaldo().toPlainString());
     }
+
+    @Test
+    @Order(5)
+    void testEliminar() {
+        //Verificamos size antes de eliminar
+        ResponseEntity<Cuenta[]> respuesta = client.getForEntity(crearUri("/api/cuentas"), Cuenta[].class);
+        List<Cuenta> cuentas = Arrays.asList(respuesta.getBody());
+        assertEquals(3, cuentas.size());
+
+        /* OPCION 1
+        para probar el eliminar
+        client.delete(crearUri("/api/cuentas/3"));
+        */
+
+        // OPCION 2 usar el exchange
+        Map<String, Long> pathVariables = new HashMap<>();
+        pathVariables.put("id", 3L);
+        ResponseEntity<Void> exchange = client.exchange(crearUri("/api/cuentas/{id}"), HttpMethod.DELETE, null, Void.class,
+                pathVariables);
+
+        assertEquals(HttpStatus.NO_CONTENT, exchange.getStatusCode());
+        assertFalse(exchange.hasBody());
+
+        //Verificamos size después de eliminar
+        respuesta = client.getForEntity(crearUri("/api/cuentas"), Cuenta[].class);
+        cuentas = Arrays.asList(respuesta.getBody());
+        assertEquals(2, cuentas.size());
+
+        ResponseEntity<Cuenta> respuestaDetalle = client.getForEntity(crearUri("/api/cuentas/3"), Cuenta.class);
+        assertEquals(HttpStatus.NOT_FOUND, respuestaDetalle.getStatusCode());
+        assertFalse(respuestaDetalle.hasBody());
+    }
+
     private String crearUri(String uri) {
         return "http://localhost:" + puerto + uri;
     }
